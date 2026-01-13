@@ -329,6 +329,26 @@ public class FriendshipDao {
         return users;
     }
 
+    public  Optional<ContactResponse> searchById(Long userId, Long id) {
+        if (userId.equals(id)) {
+            throw new InvalidFriendshipException("Unable to search yourself");
+        }
+
+        try (Connection c = Database.getConnection()) {
+            assertUserExists(c, id);
+
+            Optional<FriendshipRow> friendship = findFriendship(c, userId, id);
+
+            if (friendship.isPresent()) {
+                return loadContactResponse(c, userId, id);
+            }
+
+            return loadContactResponseWithoutFriendship(c, id);
+        } catch (SQLException e) {
+            throw new RuntimeException("DB error", e);
+        }
+    }
+
     public Optional<ContactResponse> addContact(Long userId, Long friendId) {
         if (userId.equals(friendId)) {
             throw new InvalidFriendshipException("Unable to add yourself as a friend");

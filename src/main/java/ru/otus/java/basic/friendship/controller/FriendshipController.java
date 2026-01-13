@@ -39,6 +39,16 @@ public class FriendshipController {
         return friendshipService.searchNewContacts(userId, query);
     }
 
+    @GetMapping("/{id}")
+    public ContactResponse searchById(
+            @RequestHeader("Authorization") String authHeader,
+            @PathVariable Long id) {
+        String token = authHeader.replace("Bearer ", "");
+        Long userId = jwtService.getUserId(token);
+
+        return friendshipService.searchById(userId, id);
+    }
+
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     public ContactResponse addContact(

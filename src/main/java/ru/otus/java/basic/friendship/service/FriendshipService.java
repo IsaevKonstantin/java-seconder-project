@@ -22,6 +22,11 @@ public class FriendshipService {
         return friendshipDao.searchNewContacts(userId, query);
     }
 
+    public ContactResponse searchById(Long userId, Long id) {
+        return friendshipDao.searchById(userId, id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user data"));
+    }
+
     public ContactResponse addContact(Long userId, Long contactId) {
         return friendshipDao.addContact(userId, contactId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user data"));
